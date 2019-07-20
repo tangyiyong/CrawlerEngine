@@ -37,6 +37,7 @@ class MyElasticSearch(object):
         keyword = input("请输入关键字：")
         fromCount = input("从第几页开始：")
         itemCount = input("查询几条记录：")
+        isSave = input("是否同时保存：")
         print()
 
         # 语法解析
@@ -52,14 +53,27 @@ class MyElasticSearch(object):
             "size": itemCount
         }
 
-        res = self.es.search(index="sadnesshost", body=body)
+        res = self.es.search(index="sadness", body=body)
 
         if res['hits']['total']['value'] == "0":
             print("[-] 没有找到相关记录！")
+        else:
+            infoList = []
+            for host in res[u'hits']['hits']:
+                obj = host['_source']
+                infoList.append(obj)
 
-        infoList = []
-        for host in res[u'hits']['hits']:
-            obj = host['_source']
-            infoList.append(obj)
+            # 只输出IP地址，或者域名
+            for info in infoList:
+                if info['domain'] != "":
+                    temp = info['domain'] + ":" + info['port']
+                else:
+                    temp = "http://" + info['ip'] + ":" + info['port']
 
-        print(infoList)
+                if isSave != "0":
+                    Tools.writeFile("elastic/output/elastic.txt", temp)
+
+                print("[+] " + temp)
+
+        print()
+        input("请按任意键继续...")

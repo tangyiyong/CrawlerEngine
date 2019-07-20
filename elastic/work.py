@@ -22,12 +22,8 @@ class Elastic(object):
         super(Elastic, self).__init__()
 
         # 头部信息
-        self.agent = UserAgent(use_cache_server=False)
-        self.agent = UserAgent(verify_ssl=False)
-        self.agent = UserAgent(cache=False)
-
         self.headers = {
-            'User-Agent': self.agent.random,
+            'User-Agent': UserAgent().random,
         }
 
         # 国家数据
@@ -141,21 +137,29 @@ class Elastic(object):
         response += str(resp.status) + " " + resp.reason + "\n"
         response += str(resp.info()) + "\n\n"
 
+        # 网站编码
+
         try:
-            html = resp.read().decode('utf-8')
+            encoding = resp.getheader(name="Content-Type").split("=")[1]
+        except:
+            encoding = "utf-8"
+
+        try:
+            html = resp.read().decode(encoding)
             response += html
         except:
             return
 
         try:
-            myaddr = socket.getaddrinfo(site.replace("http://"), 80)
+            myaddr = socket.getaddrinfo(site[0:-1].replace("http://"), 80)
             realip = myaddr[0][4][0]
+
+            # 获取国家
+            country = self.reader.country(realip)
+            country = country.country.name
         except:
             realip = "Unknow"
-
-        # 获取国家
-        country = self.reader.country(realip)
-        country = country.country.name
+            country = "Unknow"
 
         # 获取状态码
         statecode = str(resp.status)

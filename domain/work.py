@@ -19,12 +19,8 @@ class Domain(object):
         super(Domain, self).__init__()
 
         # 头部信息
-        self.agent = UserAgent(use_cache_server=False)
-        self.agent = UserAgent(verify_ssl=False)
-        self.agent = UserAgent(cache=False)
-
         self.headers = {
-            'User-Agent': self.agent.random,
+            'User-Agent': UserAgent().random,
         }
 
         # 数值计算
@@ -39,7 +35,7 @@ class Domain(object):
         sys.stdout.write("\r")
 
         try:
-            r = requests.get("https://site.ip138.com/" + ip, headers=self.headers, timeout=5)
+            r = requests.get("https://site.ip138.com/" + ip.split(":")[0], headers=self.headers, timeout=5)
         except:
             return
 
@@ -50,7 +46,7 @@ class Domain(object):
             return None
 
         for link in links:
-            Tools.writeFile("domain/output/sites.txt")
+            Tools.writeFile("domain/output/sites.txt", "http:/" + link.get("href"))
 
     # 开始工作
     def start(self):

@@ -32,12 +32,7 @@ class Tools(object):
     @staticmethod
     def printAscii():
         os.system("cls")
-        print('''
-You can copy & paste this ascii graphic and use it e.g. as mail signature	
-
-Font: jazmine   Reflection: no   Adjustment: left   Stretch: no      Width: 90	 Text: CrawerlEngine
-                                                                                 
-.oPYo.                                     8 .oPYo.               o              
+        print('''.oPYo.                                     8 .oPYo.               o              
 8    8                                     8 8.                                  
 8      oPYo. .oPYo. o   o   o .oPYo. oPYo. 8 `boo   odYo. .oPYo. o8 odYo. .oPYo. 
 8      8  `' .oooo8 Y. .P. .P 8oooo8 8  `' 8 .P     8' `8 8    8  8 8' `8 8oooo8 
